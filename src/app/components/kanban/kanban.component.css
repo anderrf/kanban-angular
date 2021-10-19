@@ -1,0 +1,82 @@
+#board{
+    width: 100%;
+    font-family: Tahoma;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#board h1{
+    font-size: 3rem;
+    text-align: center;
+    width: 100%;
+}
+
+.titleAdd{
+    display: flex;
+}
+
+.titleAdd > div{
+    width: 40%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.titleAdd > div input{
+    height: 2rem;
+    font-size: 1rem;
+    border-radius: 10px 0 0 10px;
+    border: none;
+    outline: none;
+    padding-left: 6px;
+}
+
+.titleAdd > div button{
+    height: 2.2rem;
+    width: 2.2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 1rem;
+    border-radius: 0 10px 10px 0;
+    border: none;
+    outline: none;
+    background: radial-gradient(#EEF2F3, #8E9EAB);
+    font-family: Tahoma;
+    font-size: 2rem;
+}
+
+#boardArea{
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 1rem;
+}
+
+.boardDiv{
+    width: 15rem;
+    min-height: 30rem;
+    background-color: #F4F4F4;
+}
+
+.boardDiv h3{
+    font-size: 2rem;
+    text-align: center;
+    width: 100%;
+    border-bottom: solid 1px #444444;
+    margin: 0 0 1rem;
+    padding: 1rem 0;
+}
+
+h1, h3{
+    color: #000000;
+}
+
+.itemSpace{
+    width: 100%;
+}
