@@ -13,7 +13,6 @@ import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag
 export class KanbanComponent implements OnInit {
 
   public taskRegister: FormGroup;
-  generalTasks: KanbanTask[];
   todoTasks: KanbanTask[];
   doingTasks: KanbanTask[];
   doneTasks: KanbanTask[];
@@ -27,11 +26,11 @@ export class KanbanComponent implements OnInit {
     this.taskRegister = this.fb.group({
       taskName: ['', [Validators.required, Validators.minLength(3)]]
     });
-    this.generalTasks = [];
     this.todoTasks = [];
     this.doingTasks = [];
     this.doneTasks = [];
-    this.taskSequence = 0;
+    this.taskSequence = this.getIndex();
+    this.retrieveList();
   }
 
   addTask(): void{
@@ -39,17 +38,18 @@ export class KanbanComponent implements OnInit {
       let task: KanbanTask = new KanbanTask(++this.taskSequence, this.taskRegister.value['taskName'], 'to-do');
       this.todoTasks.push(task);
       this.taskRegister.reset();
+      this.saveTask(task);
+      this.incIndex();
     }
   }
   
-  setTasks(): void{
-    this.todoTasks = this.generalTasks.filter(task => task.status == 'to-do');
-    this.doingTasks = this.generalTasks.filter(task => task.status == 'doing');
-    this.doneTasks = this.generalTasks.filter(task => task.status == 'done');
-    this.generalTasks = [];
+  setTasks(taskList: KanbanTask[]): void{
+    this.todoTasks = taskList.filter(task => task.status == 'to-do');
+    this.doingTasks = taskList.filter(task => task.status == 'doing');
+    this.doneTasks = taskList.filter(task => task.status == 'done');
   }
 
-  deleteTask(task: KanbanTask, index: number): void{
+  removeTask(task: KanbanTask, index: number): void{
     if(task.status == 'to-do'){
       this.todoTasks.splice(index, 1);
     }
@@ -59,6 +59,7 @@ export class KanbanComponent implements OnInit {
     else if(task.status == 'done'){
       this.doneTasks.splice(index, 1);
     }
+    this.deleteTask(task);
   }
 
   swap(event: CdkDragDrop<KanbanTask[]>) {
@@ -80,6 +81,101 @@ export class KanbanComponent implements OnInit {
       else if(event.container.data === this.doneTasks){
         event.container.data[event.currentIndex].status = 'done';
       }
+      this.updateStatus(event.container.data[event.currentIndex]);
+    }
+  }
+
+  saveTask(task: KanbanTask): void{
+    try{
+      let previousTasks: string | null = localStorage.getItem('taskList');
+      if(previousTasks === null){
+        previousTasks = "[]";
+      }
+      let currentTasks = JSON.parse(previousTasks) as KanbanTask[];
+      currentTasks.push(task)
+      localStorage.setItem('taskList', JSON.stringify(currentTasks));
+    }
+    catch(error){
+      console.log(error);
+    }
+  }
+
+  deleteTask(task: KanbanTask): void{
+    try{
+      let previousTasks: string | null = localStorage.getItem('taskList');
+      if(previousTasks === null){
+        previousTasks = "[]";
+      }
+      let currentTasks = JSON.parse(previousTasks) as KanbanTask[];
+      currentTasks.splice(currentTasks.findIndex(item => item.id === task.id), 1);
+      localStorage.setItem('taskList', JSON.stringify(currentTasks));
+    }
+    catch(error){
+      console.log(error);
+    }
+  }
+
+  updateStatus(task: KanbanTask): void{
+    try{
+      let previousTasks: string | null = localStorage.getItem('taskList');
+      if(previousTasks === null){
+        previousTasks = "[]";
+      }
+      let currentTasks = JSON.parse(previousTasks) as KanbanTask[];
+      currentTasks[currentTasks.findIndex(item => (item.id == task.id && item.description == task.description))].status = task.status;
+      localStorage.setItem('taskList', JSON.stringify(currentTasks));
+    }
+    catch(error){
+      console.log(error);
+    }
+  }
+
+  retrieveList(): void{
+    try{
+      let savedList: string | null = localStorage.getItem('taskList');
+      if(savedList === null){
+        savedList = "[]";
+      }
+      let taskList: KanbanTask[];
+      taskList = savedList === "[]" ? [] : JSON.parse(savedList) as KanbanTask[];
+      if(taskList.length > 0){
+        this.setTasks(taskList);
+      }
+    }
+    catch(error){
+      console.log(error);
+    }
+  }
+
+  getIndex(): number{
+    let numSeq: number = 0;
+    try{
+      let seqIndex: string | null = localStorage.getItem('taskSequence');
+      if(seqIndex !== null){
+        numSeq = parseInt(seqIndex);
+      }
+      else{
+        localStorage.setItem('taskSequence', '0');
+      }
+    }
+    catch(error){
+      console.log(error);
+    }
+    return numSeq;
+  }
+
+  incIndex(): void{
+    try{
+      let numSeq: number;
+      let seqIndex: string | null = localStorage.getItem('taskSequence');
+      if(seqIndex !== null){
+        numSeq = parseInt(seqIndex);
+        numSeq++;
+        localStorage.setItem('taskSequence', numSeq.toString());
+      }
+    }
+    catch(error){
+      console.log(error);
     }
   }
 }
