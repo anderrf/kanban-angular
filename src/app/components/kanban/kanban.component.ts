@@ -29,7 +29,7 @@ export class KanbanComponent implements OnInit {
     this.todoTasks = [];
     this.doingTasks = [];
     this.doneTasks = [];
-    this.taskSequence = 0;
+    this.taskSequence = this.getIndex();
     this.retrieveList();
   }
 
@@ -39,6 +39,7 @@ export class KanbanComponent implements OnInit {
       this.todoTasks.push(task);
       this.taskRegister.reset();
       this.saveTask(task);
+      this.incIndex();
     }
   }
   
@@ -121,11 +122,7 @@ export class KanbanComponent implements OnInit {
         previousTasks = "[]";
       }
       let currentTasks = JSON.parse(previousTasks) as KanbanTask[];
-      currentTasks.map(item => {
-        if(item.id === task.id){
-          item.status = task.status;
-        }
-      });
+      currentTasks[currentTasks.findIndex(item => (item.id == task.id && item.description == task.description))].status = task.status;
       localStorage.setItem('taskList', JSON.stringify(currentTasks));
     }
     catch(error){
@@ -143,6 +140,38 @@ export class KanbanComponent implements OnInit {
       taskList = savedList === "[]" ? [] : JSON.parse(savedList) as KanbanTask[];
       if(taskList.length > 0){
         this.setTasks(taskList);
+      }
+    }
+    catch(error){
+      console.log(error);
+    }
+  }
+
+  getIndex(): number{
+    let numSeq: number = 0;
+    try{
+      let seqIndex: string | null = localStorage.getItem('taskSequence');
+      if(seqIndex !== null){
+        numSeq = parseInt(seqIndex);
+      }
+      else{
+        localStorage.setItem('taskSequence', '0');
+      }
+    }
+    catch(error){
+      console.log(error);
+    }
+    return numSeq;
+  }
+
+  incIndex(): void{
+    try{
+      let numSeq: number;
+      let seqIndex: string | null = localStorage.getItem('taskSequence');
+      if(seqIndex !== null){
+        numSeq = parseInt(seqIndex);
+        numSeq++;
+        localStorage.setItem('taskSequence', numSeq.toString());
       }
     }
     catch(error){
