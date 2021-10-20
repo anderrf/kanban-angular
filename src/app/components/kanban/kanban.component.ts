@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
+import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-kanban',
@@ -60,4 +61,25 @@ export class KanbanComponent implements OnInit {
     }
   }
 
+  swap(event: CdkDragDrop<KanbanTask[]>) {
+    //Move task inside an array
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    }
+    //move task from an array into another
+    else {
+      transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
+      //checks if new array is one of the arrays for tasks
+      //changes the item's status to match the array
+      if(event.container.data === this.todoTasks){
+        event.container.data[event.currentIndex].status = 'to-do';
+      }
+      else if(event.container.data === this.doingTasks){
+        event.container.data[event.currentIndex].status = 'doing';
+      }
+      else if(event.container.data === this.doneTasks){
+        event.container.data[event.currentIndex].status = 'done';
+      }
+    }
+  }
 }
