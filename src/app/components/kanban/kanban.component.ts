@@ -12,7 +12,10 @@ import { MatButton } from '@angular/material/button';
 export class KanbanComponent implements OnInit {
 
   public taskRegister: FormGroup;
-  tasks: KanbanTask[];
+  generalTasks: KanbanTask[];
+  todoTasks: KanbanTask[];
+  doingTasks: KanbanTask[];
+  doneTasks: KanbanTask[];
   taskSequence: number;
 
   constructor(private fb: FormBuilder) {
@@ -23,15 +26,37 @@ export class KanbanComponent implements OnInit {
     this.taskRegister = this.fb.group({
       taskName: ['', [Validators.required, Validators.minLength(3)]]
     });
-    this.tasks = [];
+    this.generalTasks = [];
+    this.todoTasks = [];
+    this.doingTasks = [];
+    this.doneTasks = [];
     this.taskSequence = 0;
   }
 
   addTask(): void{
     if(this.taskRegister.valid){
       let task: KanbanTask = new KanbanTask(++this.taskSequence, this.taskRegister.value['taskName'], 'to-do');
-      this.tasks.push(task);
+      this.todoTasks.push(task);
       this.taskRegister.reset();
+    }
+  }
+  
+  setTasks(): void{
+    this.todoTasks = this.generalTasks.filter(task => task.status == 'to-do');
+    this.doingTasks = this.generalTasks.filter(task => task.status == 'doing');
+    this.doneTasks = this.generalTasks.filter(task => task.status == 'done');
+    this.generalTasks = [];
+  }
+
+  deleteTask(task: KanbanTask, index: number): void{
+    if(task.status == 'to-do'){
+      this.todoTasks.splice(index, 1);
+    }
+    else if(task.status == 'doing'){
+      this.doingTasks.splice(index, 1);
+    }
+    else if(task.status == 'done'){
+      this.doneTasks.splice(index, 1);
     }
   }
 

@@ -10,25 +10,44 @@
         <section class="boardDiv">
             <h3>To do</h3>
             <div class="itemSpace">
-                <div *ngFor="let task of tasks" class="singleItem">
+                <div *ngFor="let task of todoTasks; let a = index" class="singleItem">
                     <span>{{task.id}}</span>
                     <div>
                         <p>{{task.description}}</p>
-                        <button mat-mini-fab color="light">
+                        <button mat-mini-fab color="light" (click)="deleteTask(task, a)">
                             <mat-icon>delete_outline</mat-icon>
                         </button>
                     </div>
-                    
                 </div>
             </div>
         </section>
         <section class="boardDiv">
             <h3>Doing</h3>
-            <div class="itemSpace"></div>
+            <div class="itemSpace">
+                <div *ngFor="let task of doingTasks; let b = index" class="singleItem">
+                    <span>{{task.id}}</span>
+                    <div>
+                        <p>{{task.description}}</p>
+                        <button mat-mini-fab color="light" (click)="deleteTask(task, b)">
+                            <mat-icon>delete_outline</mat-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </section>
         <section class="boardDiv">
             <h3>Done</h3>
-            <div class="itemSpace"></div>
+            <div class="itemSpace">
+                <div *ngFor="let task of doneTasks; let c = index" class="singleItem">
+                    <span>{{task.id}}</span>
+                    <div>
+                        <p>{{task.description}}</p>
+                        <button mat-mini-fab color="light" (click)="deleteTask(task, c)">
+                            <mat-icon>delete_outline</mat-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </section>
     </main>
 </div>
