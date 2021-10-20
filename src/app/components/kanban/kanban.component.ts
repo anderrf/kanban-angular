@@ -13,7 +13,6 @@ import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag
 export class KanbanComponent implements OnInit {
 
   public taskRegister: FormGroup;
-  generalTasks: KanbanTask[];
   todoTasks: KanbanTask[];
   doingTasks: KanbanTask[];
   doneTasks: KanbanTask[];
@@ -27,11 +26,11 @@ export class KanbanComponent implements OnInit {
     this.taskRegister = this.fb.group({
       taskName: ['', [Validators.required, Validators.minLength(3)]]
     });
-    this.generalTasks = [];
     this.todoTasks = [];
     this.doingTasks = [];
     this.doneTasks = [];
     this.taskSequence = 0;
+    this.retrieveList();
   }
 
   addTask(): void{
@@ -43,10 +42,10 @@ export class KanbanComponent implements OnInit {
     }
   }
   
-  setTasks(): void{
-    this.todoTasks = this.generalTasks.filter(task => task.status == 'to-do');
-    this.doingTasks = this.generalTasks.filter(task => task.status == 'doing');
-    this.doneTasks = this.generalTasks.filter(task => task.status == 'done');
+  setTasks(taskList: KanbanTask[]): void{
+    this.todoTasks = taskList.filter(task => task.status == 'to-do');
+    this.doingTasks = taskList.filter(task => task.status == 'doing');
+    this.doneTasks = taskList.filter(task => task.status == 'done');
   }
 
   removeTask(task: KanbanTask, index: number): void{
@@ -81,6 +80,7 @@ export class KanbanComponent implements OnInit {
       else if(event.container.data === this.doneTasks){
         event.container.data[event.currentIndex].status = 'done';
       }
+      this.updateStatus(event.container.data[event.currentIndex]);
     }
   }
 
@@ -108,6 +108,42 @@ export class KanbanComponent implements OnInit {
       let currentTasks = JSON.parse(previousTasks) as KanbanTask[];
       currentTasks.splice(currentTasks.findIndex(item => item.id === task.id), 1);
       localStorage.setItem('taskList', JSON.stringify(currentTasks));
+    }
+    catch(error){
+      console.log(error);
+    }
+  }
+
+  updateStatus(task: KanbanTask): void{
+    try{
+      let previousTasks: string | null = localStorage.getItem('taskList');
+      if(previousTasks === null){
+        previousTasks = "[]";
+      }
+      let currentTasks = JSON.parse(previousTasks) as KanbanTask[];
+      currentTasks.map(item => {
+        if(item.id === task.id){
+          item.status = task.status;
+        }
+      });
+      localStorage.setItem('taskList', JSON.stringify(currentTasks));
+    }
+    catch(error){
+      console.log(error);
+    }
+  }
+
+  retrieveList(): void{
+    try{
+      let savedList: string | null = localStorage.getItem('taskList');
+      if(savedList === null){
+        savedList = "[]";
+      }
+      let taskList: KanbanTask[];
+      taskList = savedList === "[]" ? [] : JSON.parse(savedList) as KanbanTask[];
+      if(taskList.length > 0){
+        this.setTasks(taskList);
+      }
     }
     catch(error){
       console.log(error);
