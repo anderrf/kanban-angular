@@ -15,9 +15,10 @@
 
 .titleAdd{
     display: flex;
+    margin: 2rem;
 }
 
-.titleAdd > div{
+.titleAdd > form{
     width: 40%;
     display: flex;
     flex-direction: row;
@@ -25,7 +26,7 @@
     justify-content: flex-end;
 }
 
-.titleAdd > div input{
+.titleAdd > form input{
     height: 2rem;
     font-size: 1rem;
     border-radius: 10px 0 0 10px;
@@ -34,9 +35,9 @@
     padding-left: 6px;
 }
 
-.titleAdd > div button{
-    height: 2.2rem;
-    width: 2.2rem;
+.titleAdd > form button{
+    height: 2.1rem;
+    width: 2.1rem;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -49,6 +50,11 @@
     background: radial-gradient(#EEF2F3, #8E9EAB);
     font-family: Tahoma;
     font-size: 2rem;
+    cursor: pointer;
+}
+
+.titleAdd > form button:hover{
+    background: radial-gradient(#DDE1E2, #7D8D9A);
 }
 
 #boardArea{
@@ -69,7 +75,7 @@
     text-align: center;
     width: 100%;
     border-bottom: solid 1px #444444;
-    margin: 0 0 1rem;
+    margin: 0 0 0.5rem;
     padding: 1rem 0;
 }
 
@@ -79,4 +85,41 @@ h1, h3{
 
 .itemSpace{
     width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.singleItem{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0.4rem;
+}
+
+.singleItem + .singleItem{
+    border-top: 1px solid #999999;
+    margin-top: 0.4rem;
+}
+
+.singleItem span{
+    font-size: 0.8rem;
+    margin: 0.2rem 0;
+}
+
+.singleItem div{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.singleItem div p{
+    font-size: 1.2rem;
+    text-align: left;
+    width: 65%;
+}
+
+.singleItem div button{
+    font-size: 1.2rem;
 }

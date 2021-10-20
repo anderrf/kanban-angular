@@ -1,15 +1,26 @@
 <div id="board">
     <div class="titleAdd">
         <h1>Kanban</h1>
-        <div>
-            <input type="text">
-            <button>+</button>
-        </div>
+        <form [formGroup]="taskRegister">
+            <input type="text" formControlName="taskName">
+            <button (click)="addTask()">+</button>
+        </form>
     </div>
     <main id="boardArea">
         <section class="boardDiv">
             <h3>To do</h3>
-            <div class="itemSpace"></div>
+            <div class="itemSpace">
+                <div *ngFor="let task of tasks" class="singleItem">
+                    <span>{{task.id}}</span>
+                    <div>
+                        <p>{{task.description}}</p>
+                        <button mat-mini-fab color="light">
+                            <mat-icon>delete_outline</mat-icon>
+                        </button>
+                    </div>
+                    
+                </div>
+            </div>
         </section>
         <section class="boardDiv">
             <h3>Doing</h3>
