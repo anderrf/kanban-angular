@@ -39,6 +39,7 @@ export class KanbanComponent implements OnInit {
       let task: KanbanTask = new KanbanTask(++this.taskSequence, this.taskRegister.value['taskName'], 'to-do');
       this.todoTasks.push(task);
       this.taskRegister.reset();
+      this.saveTask(task);
     }
   }
   
@@ -46,10 +47,9 @@ export class KanbanComponent implements OnInit {
     this.todoTasks = this.generalTasks.filter(task => task.status == 'to-do');
     this.doingTasks = this.generalTasks.filter(task => task.status == 'doing');
     this.doneTasks = this.generalTasks.filter(task => task.status == 'done');
-    this.generalTasks = [];
   }
 
-  deleteTask(task: KanbanTask, index: number): void{
+  removeTask(task: KanbanTask, index: number): void{
     if(task.status == 'to-do'){
       this.todoTasks.splice(index, 1);
     }
@@ -59,6 +59,7 @@ export class KanbanComponent implements OnInit {
     else if(task.status == 'done'){
       this.doneTasks.splice(index, 1);
     }
+    this.deleteTask(task);
   }
 
   swap(event: CdkDragDrop<KanbanTask[]>) {
@@ -80,6 +81,36 @@ export class KanbanComponent implements OnInit {
       else if(event.container.data === this.doneTasks){
         event.container.data[event.currentIndex].status = 'done';
       }
+    }
+  }
+
+  saveTask(task: KanbanTask): void{
+    try{
+      let previousTasks: string | null = localStorage.getItem('taskList');
+      if(previousTasks === null){
+        previousTasks = "[]";
+      }
+      let currentTasks = JSON.parse(previousTasks) as KanbanTask[];
+      currentTasks.push(task)
+      localStorage.setItem('taskList', JSON.stringify(currentTasks));
+    }
+    catch(error){
+      console.log(error);
+    }
+  }
+
+  deleteTask(task: KanbanTask): void{
+    try{
+      let previousTasks: string | null = localStorage.getItem('taskList');
+      if(previousTasks === null){
+        previousTasks = "[]";
+      }
+      let currentTasks = JSON.parse(previousTasks) as KanbanTask[];
+      currentTasks.splice(currentTasks.findIndex(item => item.id === task.id), 1);
+      localStorage.setItem('taskList', JSON.stringify(currentTasks));
+    }
+    catch(error){
+      console.log(error);
     }
   }
 }
