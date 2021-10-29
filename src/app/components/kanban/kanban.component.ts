@@ -1,9 +1,6 @@
-import { KanbanTask } from '../kanbanTask';
+import { KanbanTask } from './../kanbanTask';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatIcon } from '@angular/material/icon';
-import { MatButton } from '@angular/material/button';
-import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-kanban',
@@ -13,22 +10,26 @@ import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag
 export class KanbanComponent implements OnInit {
 
   public taskRegister: FormGroup;
-  todoTasks: KanbanTask[];
-  doingTasks: KanbanTask[];
-  doneTasks: KanbanTask[];
+  taskList: KanbanTask[];
+  todoList: KanbanTask[];
+  doingList: KanbanTask[];
+  doneList: KanbanTask[];
+  itemStatus: string[];
   taskSequence: number;
 
   constructor(private fb: FormBuilder) {
-    
+
    }
 
   ngOnInit(): void {
+    this.itemStatus = ['to-do', 'doing', 'done'];
     this.taskRegister = this.fb.group({
       taskName: ['', [Validators.required, Validators.minLength(3)]]
     });
-    this.todoTasks = [];
-    this.doingTasks = [];
-    this.doneTasks = [];
+    this.taskList = [];
+    this.todoList = [];
+    this.doingList = [];
+    this.doneList = [];
     this.taskSequence = this.getIndex();
     this.retrieveList();
   }
@@ -36,53 +37,35 @@ export class KanbanComponent implements OnInit {
   addTask(): void{
     if(this.taskRegister.valid){
       let task: KanbanTask = new KanbanTask(++this.taskSequence, this.taskRegister.value['taskName'], 'to-do');
-      this.todoTasks.push(task);
+      this.taskList.push(task);
       this.taskRegister.reset();
+      this.setTasks();
       this.saveTask(task);
       this.incIndex();
     }
   }
-  
-  setTasks(taskList: KanbanTask[]): void{
-    this.todoTasks = taskList.filter(task => task.status == 'to-do');
-    this.doingTasks = taskList.filter(task => task.status == 'doing');
-    this.doneTasks = taskList.filter(task => task.status == 'done');
+
+  private setTasks(): void{
+    this.todoList = this.taskList.filter(task => task.status == 'to-do');
+    this.doingList = this.taskList.filter(task => task.status == 'doing');
+    this.doneList = this.taskList.filter(task => task.status == 'done');
   }
 
-  removeTask(task: KanbanTask, index: number): void{
-    if(task.status == 'to-do'){
-      this.todoTasks.splice(index, 1);
+  sendList(status: string): KanbanTask[]{
+    let list: KanbanTask[];
+    if(status === 'to-do'){
+      list = this.todoList;
     }
-    else if(task.status == 'doing'){
-      this.doingTasks.splice(index, 1);
+    else if(status === 'doing'){
+      list = this.doingList;
     }
-    else if(task.status == 'done'){
-      this.doneTasks.splice(index, 1);
+    else if(status === 'done'){
+      list = this.doneList;
     }
-    this.deleteTask(task);
-  }
-
-  swap(event: CdkDragDrop<KanbanTask[]>) {
-    //Move task inside an array
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    else{
+      list = [];
     }
-    //move task from an array into another
-    else {
-      transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
-      //checks if new array is one of the arrays for tasks
-      //changes the item's status to match the array
-      if(event.container.data === this.todoTasks){
-        event.container.data[event.currentIndex].status = 'to-do';
-      }
-      else if(event.container.data === this.doingTasks){
-        event.container.data[event.currentIndex].status = 'doing';
-      }
-      else if(event.container.data === this.doneTasks){
-        event.container.data[event.currentIndex].status = 'done';
-      }
-      this.updateStatus(event.container.data[event.currentIndex]);
-    }
+    return list;
   }
 
   saveTask(task: KanbanTask): void{
@@ -100,46 +83,52 @@ export class KanbanComponent implements OnInit {
     }
   }
 
-  deleteTask(task: KanbanTask): void{
+  deleteTask($event: any): void{
     try{
+      const deleteId: number = $event as number;
       let previousTasks: string | null = localStorage.getItem('taskList');
       if(previousTasks === null){
         previousTasks = "[]";
       }
-      let currentTasks = JSON.parse(previousTasks) as KanbanTask[];
-      currentTasks.splice(currentTasks.findIndex(item => item.id === task.id), 1);
-      localStorage.setItem('taskList', JSON.stringify(currentTasks));
+      else{
+        let currentTasks = JSON.parse(previousTasks) as KanbanTask[];
+        currentTasks.splice(currentTasks.findIndex(item => item.id == deleteId), 1);
+        this.taskList.splice(this.taskList.findIndex(item => item.id == deleteId), 1);
+        localStorage.setItem('taskList', JSON.stringify(currentTasks));
+      }
     }
     catch(error){
       console.log(error);
     }
   }
 
-  updateStatus(task: KanbanTask): void{
+  updateStatus($event: any): void{
     try{
+      const task = $event as KanbanTask;
       let previousTasks: string | null = localStorage.getItem('taskList');
       if(previousTasks === null){
         previousTasks = "[]";
       }
-      let currentTasks = JSON.parse(previousTasks) as KanbanTask[];
-      currentTasks[currentTasks.findIndex(item => (item.id == task.id && item.description == task.description))].status = task.status;
-      localStorage.setItem('taskList', JSON.stringify(currentTasks));
+      else{
+        let currentTasks = JSON.parse(previousTasks) as KanbanTask[];
+        currentTasks[currentTasks.findIndex(item => (item.id == task.id))].status = task.status;
+        localStorage.setItem('taskList', JSON.stringify(currentTasks));
+      }
     }
     catch(error){
       console.log(error);
     }
   }
 
-  retrieveList(): void{
+  private retrieveList(): void{
     try{
       let savedList: string | null = localStorage.getItem('taskList');
       if(savedList === null){
         savedList = "[]";
       }
-      let taskList: KanbanTask[];
-      taskList = savedList === "[]" ? [] : JSON.parse(savedList) as KanbanTask[];
-      if(taskList.length > 0){
-        this.setTasks(taskList);
+      this.taskList = savedList === "[]" ? [] : JSON.parse(savedList) as KanbanTask[];
+      if(this.taskList.length > 0){
+        this.setTasks();
       }
     }
     catch(error){
@@ -147,7 +136,7 @@ export class KanbanComponent implements OnInit {
     }
   }
 
-  getIndex(): number{
+  private getIndex(): number{
     let numSeq: number = 0;
     try{
       let seqIndex: string | null = localStorage.getItem('taskSequence');
@@ -164,7 +153,7 @@ export class KanbanComponent implements OnInit {
     return numSeq;
   }
 
-  incIndex(): void{
+  private incIndex(): void{
     try{
       let numSeq: number;
       let seqIndex: string | null = localStorage.getItem('taskSequence');

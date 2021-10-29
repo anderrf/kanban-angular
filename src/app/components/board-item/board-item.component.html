@@ -1,0 +1,14 @@
+<section class="boardDiv">
+  <h3>{{listStatusName}}</h3>
+  <div class="itemSpace" cdkDropList [cdkDropListData]="taskList" (cdkDropListDropped)="swap($event)" [id]="listStatusName">
+      <div *ngFor="let task of taskList; let a = index" class="singleItem" cdkDrag>
+          <span>{{task.id}}</span>
+          <div>
+              <p>{{task.description}}</p>
+              <button mat-mini-fab color="light" (click)="removeTask(task, a)">
+                  <mat-icon>delete_outline</mat-icon>
+              </button>
+          </div>
+      </div>
+  </div>
+</section>

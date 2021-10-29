@@ -1,0 +1,62 @@
+.boardDiv{
+  width: 15rem;
+  min-height: 30rem;
+  background-color: #F4F4F4;
+}
+
+.boardDiv h3{
+  font-size: 2rem;
+  text-align: center;
+  width: 100%;
+  border-bottom: solid 1px #444444;
+  margin: 0 0 0.5rem;
+  padding: 1rem 0;
+}
+
+h1, h3{
+  color: #000000;
+}
+
+.itemSpace{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 10rem;
+  max-height: 25rem;
+  overflow: hidden auto;
+}
+
+.singleItem{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0.4rem;
+}
+
+.singleItem + .singleItem{
+  border-top: 1px solid #999999;
+  margin-top: 0.4rem;
+}
+
+.singleItem span{
+  font-size: 0.8rem;
+  margin: 0.2rem 0;
+}
+
+.singleItem div{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.singleItem div p{
+  font-size: 1.2rem;
+  text-align: left;
+  width: 65%;
+}
+
+.singleItem div button{
+  font-size: 1.2rem;
+}
