@@ -1,0 +1,9 @@
+<div class="singleItem" cdkDrag>
+  <span>{{task.id}}</span>
+  <div>
+      <p>{{task.description}}</p>
+      <button mat-mini-fab color="light" (click)="removeTask()">
+          <mat-icon>delete_outline</mat-icon>
+      </button>
+  </div>
+</div>

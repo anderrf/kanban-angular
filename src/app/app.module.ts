@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, EventEmitter } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -8,12 +8,16 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { DragDropModule } from '@angular/cdk/drag-drop'
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { BoardItemComponent } from './components/board-item/board-item.component';
+import { TaskItemComponent } from './components/task-item/task-item.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    KanbanComponent
+    KanbanComponent,
+    BoardItemComponent,
+    TaskItemComponent
   ],
   imports: [
     BrowserModule,

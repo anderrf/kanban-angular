@@ -2,52 +2,11 @@
     <div class="titleAdd">
         <h1>Kanban</h1>
         <form [formGroup]="taskRegister">
-            <input type="text" formControlName="taskName">
+            <input type="text" formControlName="taskName" placeholder="Insira uma nova tarefa">
             <button (click)="addTask()">+</button>
         </form>
     </div>
     <main id="boardArea" cdkDropListGroup>
-        <section class="boardDiv">
-            <h3>To do</h3>
-            <div class="itemSpace" cdkDropList [cdkDropListData]="todoTasks" (cdkDropListDropped)="swap($event)">
-                <div *ngFor="let task of todoTasks; let a = index" class="singleItem" cdkDrag>
-                    <span>{{task.id}}</span>
-                    <div>
-                        <p>{{task.description}}</p>
-                        <button mat-mini-fab color="light" (click)="removeTask(task, a)">
-                            <mat-icon>delete_outline</mat-icon>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <section class="boardDiv">
-            <h3>Doing</h3>
-            <div class="itemSpace" cdkDropList [cdkDropListData]="doingTasks" (cdkDropListDropped)="swap($event)">
-                <div *ngFor="let task of doingTasks; let b = index" class="singleItem" cdkDrag>
-                    <span>{{task.id}}</span>
-                    <div>
-                        <p>{{task.description}}</p>
-                        <button mat-mini-fab color="light" (click)="removeTask(task, b)">
-                            <mat-icon>delete_outline</mat-icon>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <section class="boardDiv">
-            <h3>Done</h3>
-            <div class="itemSpace" cdkDropList [cdkDropListData]="doneTasks" (cdkDropListDropped)="swap($event)">
-                <div *ngFor="let task of doneTasks; let c = index" class="singleItem" cdkDrag>
-                    <span>{{task.id}}</span>
-                    <div>
-                        <p>{{task.description}}</p>
-                        <button mat-mini-fab color="light" (click)="removeTask(task, c)">
-                            <mat-icon>delete_outline</mat-icon>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <app-board-item *ngFor="let status of itemStatus" [listStatusName]="status" [taskList]="sendList(status)" (onDelete)="deleteTask($event)" (onSwap)="updateStatus($event)"></app-board-item>
     </main>
 </div>

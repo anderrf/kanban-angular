@@ -1,0 +1,6 @@
+<section class="boardDiv">
+  <h3>{{listStatusName}}</h3>
+  <div class="itemSpace" cdkDropList [cdkDropListData]="taskList" (cdkDropListDropped)="swap($event)" [id]="listStatusName">
+      <app-task-item *ngFor="let task of taskList; let a = index" [task]="task" [listIndex]="a" (onRemove)="removeTask($event)"></app-task-item>
+  </div>
+</section>

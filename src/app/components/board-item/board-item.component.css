@@ -1,0 +1,29 @@
+.boardDiv{
+  width: 15rem;
+  min-height: 30rem;
+  background-color: #F4F4F4;
+}
+
+.boardDiv h3{
+  font-size: 2rem;
+  text-align: center;
+  width: 100%;
+  border-bottom: solid 1px #444444;
+  margin: 0 0 0.5rem;
+  padding: 1rem 0;
+}
+
+h1, h3{
+  color: #000000;
+}
+
+.itemSpace{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 20rem;
+  max-height: 25rem;
+  overflow: hidden auto;
+}
+
+
