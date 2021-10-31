@@ -21,42 +21,9 @@ h1, h3{
   width: 100%;
   display: flex;
   flex-direction: column;
-  min-height: 10rem;
+  min-height: 20rem;
   max-height: 25rem;
   overflow: hidden auto;
 }
 
-.singleItem{
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 0.4rem;
-}
 
-.singleItem + .singleItem{
-  border-top: 1px solid #999999;
-  margin-top: 0.4rem;
-}
-
-.singleItem span{
-  font-size: 0.8rem;
-  margin: 0.2rem 0;
-}
-
-.singleItem div{
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  align-items: center;
-  justify-content: space-around;
-}
-
-.singleItem div p{
-  font-size: 1.2rem;
-  text-align: left;
-  width: 65%;
-}
-
-.singleItem div button{
-  font-size: 1.2rem;
-}

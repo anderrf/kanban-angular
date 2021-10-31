@@ -19,9 +19,11 @@ export class BoardItemComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  removeTask(task: KanbanTask, index: number): void{
-    this.taskList.splice(index, 1);
-    this.onDelete.emit(task.id);
+  removeTask($event: any): void{
+    const taskId = $event.taskId as number;
+    const listId = $event.listId as number;
+    this.taskList.splice(listId, 1);
+    this.onDelete.emit(taskId);
   }
 
   swap(event: CdkDragDrop<KanbanTask[]>): void{

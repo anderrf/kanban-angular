@@ -10,12 +10,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { BoardItemComponent } from './components/board-item/board-item.component';
+import { TaskItemComponent } from './components/task-item/task-item.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     KanbanComponent,
-    BoardItemComponent
+    BoardItemComponent,
+    TaskItemComponent
   ],
   imports: [
     BrowserModule,
