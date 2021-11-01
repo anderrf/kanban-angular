@@ -3,7 +3,7 @@
         <h1>Kanban</h1>
     </div>
     <main id="boardArea" cdkDropListGroup>
-        <app-board-item *ngFor="let status of itemStatus" [listStatusName]="status" [taskList]="sendList(status)" (onDelete)="deleteTask($event)" (onSwap)="updateStatus($event)"></app-board-item>
+        <app-board-item *ngFor="let list of taskLists" [listName]="list.listName" [taskList]="list.tasks" (onDeleteList)="removeList($event)"></app-board-item>
         <button mat-raised-button (click)="addBoard()">
           <mat-icon>add</mat-icon>
         </button>

@@ -4,13 +4,27 @@
   background-color: #F4F4F4;
 }
 
-.boardDiv h3{
+.boardDiv header{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  border-bottom: solid 1px #444444;
+}
+
+.boardDiv header h3{
   font-size: 2rem;
   text-align: center;
   width: 100%;
-  border-bottom: solid 1px #444444;
   margin: 0 0 0.5rem;
   padding: 1rem 0;
+}
+
+.boardDiv header button{
+  width: 2rem;
+  height: 2rem;
+  font-size: 1rem;
+  margin: auto 0.5rem;
 }
 
 h1, h3{
