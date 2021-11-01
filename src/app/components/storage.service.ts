@@ -1,4 +1,4 @@
-import { KanbanTask } from './kanbanTask';
+import { KanbanTask } from '../models/kanbanTask';
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -56,7 +56,7 @@ export class StorageService {
   }
 
   getSequence(): number{
-    let seq: number = 0;
+    let seq: number = 1;
     try{
       const receivedSeq: string | null = localStorage.getItem(this.taskSequenceKey);
       if(receivedSeq !== null){

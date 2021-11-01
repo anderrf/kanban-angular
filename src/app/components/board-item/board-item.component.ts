@@ -1,4 +1,4 @@
-import { KanbanTask } from './../kanbanTask';
+import { KanbanTask } from '../../models/kanbanTask';
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 

@@ -1,4 +1,4 @@
-import { KanbanTask } from './../kanbanTask';
+import { KanbanTask } from '../../models/kanbanTask';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({

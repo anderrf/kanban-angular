@@ -1,7 +1,8 @@
-import { KanbanTask } from './../kanbanTask';
+import { KanbanTask } from '../../models/kanbanTask';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { StorageService } from '../storage.service';
+import { MatDialog } from '@angular/material/dialog';
+import { AdditionDialogComponent } from '../addition-dialog/addition-dialog.component';
 
 @Component({
   selector: 'app-kanban',
@@ -10,25 +11,21 @@ import { StorageService } from '../storage.service';
 })
 export class KanbanComponent implements OnInit {
 
-  public taskRegister!: FormGroup;
   taskList!: KanbanTask[];
   todoList!: KanbanTask[];
   doingList!: KanbanTask[];
   doneList!: KanbanTask[];
-  readonly itemStatus: string[] = ['to-do', 'doing', 'done'];
+  itemStatus: string[] = ['to-do', 'doing', 'done'];
 
-  constructor(private fb: FormBuilder, private storageService: StorageService) {
+  constructor(private storageService: StorageService, public dialog: MatDialog) {
    }
 
   ngOnInit(): void {
-    this.taskRegister = this.fb.group({
-      taskName: ['', [Validators.required, Validators.minLength(3)]]
-    });
     this.taskList = this.storageService.retrieveAllTasks();
     this.setTasks();
   }
 
-  addTask(): void{
+  /*addTask(): void{
     if(this.taskRegister.valid){
       let task: KanbanTask = new KanbanTask(this.storageService.getSequence(), this.taskRegister.value['taskName'], 'to-do');
       this.taskList.push(task);
@@ -36,7 +33,7 @@ export class KanbanComponent implements OnInit {
       this.setTasks();
       this.storageService.saveTask(task);
     }
-  }
+  }*/
 
   private setTasks(): void{
     this.todoList = this.taskList.filter(task => task.status == 'to-do');
@@ -80,5 +77,16 @@ export class KanbanComponent implements OnInit {
     catch(error){
       console.log(error);
     }
+  }
+
+  addBoard(): void{
+    const addDialog = this.dialog.open(AdditionDialogComponent, {
+      width: '20rem',
+      data: {itemCategory: 'lista'}
+    });
+    addDialog.afterClosed().subscribe(result => {
+      const newList = result as string;
+      this.itemStatus.push(newList);
+    });
   }
 }

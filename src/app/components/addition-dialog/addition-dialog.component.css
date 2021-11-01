@@ -1,0 +1,35 @@
+form{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+form input{
+  height: 2rem;
+  width: 90%;
+  font-size: 1rem;
+  border: solid 1px #7D8D9A;
+  outline: none;
+  padding-left: 6px;
+}
+
+form button{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border: none;
+  outline: none;
+  background: radial-gradient(#EEF2F3, #8E9EAB);
+  font-family: Tahoma;
+  font-size: 2rem;
+  cursor: pointer;
+  width: 90%;
+  margin-top: 2rem;
+}
+
+form button:hover{
+  background: radial-gradient(#DDE1E2, #7D8D9A);
+}
