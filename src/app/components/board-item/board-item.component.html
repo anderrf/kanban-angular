@@ -1,12 +1,12 @@
 <section class="boardDiv">
   <header>
-    <h3>{{listName}}</h3>
+    <h3>{{list.listName}}</h3>
     <button mat-mini-fab color="light" (click)="deleteList()">
       <mat-icon color="warn">close</mat-icon>
     </button>
   </header>
-  <div class="itemSpace" cdkDropList [cdkDropListData]="taskList" (cdkDropListDropped)="swap($event)" [id]="listName">
-      <app-task-item *ngFor="let task of taskList; let index = index" [task]="task" [listIndex]="index" (onRemove)="removeTask($event)"></app-task-item>
+  <div class="itemSpace" cdkDropList [cdkDropListData]="list.tasks" (cdkDropListDropped)="swap($event)" [id]="list.listName">
+      <app-task-item *ngFor="let task of list.tasks; let index = index" [task]="task" [listIndex]="index" (onRemove)="removeTask($event)"></app-task-item>
       <button mat-button (click)="addTask()">
         <mat-icon>add_circle</mat-icon>
       </button>

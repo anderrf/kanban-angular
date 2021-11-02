@@ -1,3 +1,4 @@
+import { TaskList } from './../../models/task-list';
 import { KanbanTask } from '../../models/kanbanTask';
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
@@ -12,10 +13,11 @@ import { StorageService } from '../storage.service';
 })
 export class BoardItemComponent implements OnInit {
 
-  @Input() listName!: string;
-  @Input() taskList!: KanbanTask[];
+  @Input() list!: TaskList;
   @Output() onSwap: EventEmitter<KanbanTask> = new EventEmitter();
+  @Output() onAddTask: EventEmitter<string> = new EventEmitter();
   @Output() onDeleteList: EventEmitter<string> = new EventEmitter();
+  @Output() onDeleteTask: EventEmitter<string> = new EventEmitter();
 
   constructor(public dialog: MatDialog, private storageService: StorageService) { }
 
@@ -25,7 +27,8 @@ export class BoardItemComponent implements OnInit {
   removeTask($event: any): void{
     const taskId = $event.taskId as number;
     const listId = $event.listId as number;
-    this.taskList.splice(listId, 1);
+    this.list.tasks.splice(listId, 1);
+    this.onDeleteTask.emit();
   }
 
   swap(event: CdkDragDrop<KanbanTask[]>): void{
@@ -39,9 +42,8 @@ export class BoardItemComponent implements OnInit {
       //checks if new array is one of the arrays for tasks
       //changes the item's status to match the array
       event.container.data[event.currentIndex].status = event.container.id;
-      const task = event.container.data[event.currentIndex];
-      this.onSwap.emit(task);
     }
+    this.onSwap.emit();
   }
 
   addTask(): void{
@@ -57,16 +59,17 @@ export class BoardItemComponent implements OnInit {
           const newTask: KanbanTask = {
             id: this.storageService.getSequence(),
             description: newTaskName,
-            status: this.listName
+            status: this.list.listName
           };
-          this.taskList.push(newTask);
+          this.list.tasks.push(newTask);
+          this.onAddTask.emit();
         }
       }
     });
   }
 
   deleteList(){
-    this.onDeleteList.emit(this.listName);
+    this.onDeleteList.emit(this.list.listName);
   }
 
 }

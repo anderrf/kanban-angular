@@ -17,7 +17,7 @@ export class KanbanComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    this.taskLists = [];
+    this.taskLists = this.storageService.retrieveAllLists();
   }
 
   addBoard(): void{
@@ -36,6 +36,7 @@ export class KanbanComponent implements OnInit {
         if(valid){
           const newList: TaskList = {listName: newListName, tasks: []};
           this.taskLists.push(newList);
+          this.updateLists();
         }
       }
     });
@@ -44,5 +45,10 @@ export class KanbanComponent implements OnInit {
   removeList($event: any){
     const removedList = $event as string;
     this.taskLists.splice(this.taskLists.findIndex(list => list.listName == removedList), 1);
+    this.updateLists();
+  }
+
+  updateLists(){
+    this.storageService.updateAllLists(this.taskLists);
   }
 }
