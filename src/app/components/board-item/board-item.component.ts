@@ -5,6 +5,7 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 import { MatDialog } from '@angular/material/dialog';
 import { AdditionDialogComponent } from '../addition-dialog/addition-dialog.component';
 import { StorageService } from '../storage.service';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-board-item',
@@ -69,7 +70,18 @@ export class BoardItemComponent implements OnInit {
   }
 
   deleteList(){
-    this.onDeleteList.emit(this.list.listName);
+    const removeDialog = this.dialog.open(ConfirmDialogComponent, {
+      width: '20rem',
+      data: {itemCategory: 'lista'}
+    });
+    removeDialog.afterClosed().subscribe(result => {
+      if(result){
+        const option = result.option as boolean;
+        if(option){
+          this.onDeleteList.emit(this.list.listName);
+        }
+      }
+    });
   }
 
 }

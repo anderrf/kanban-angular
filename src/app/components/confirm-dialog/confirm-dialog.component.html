@@ -1,0 +1,11 @@
+<div class="dialog-container">
+  <p>Deseja mesmo deletar essa {{itemCategory}}? Ela não ficará mais acessível desta forma!</p>
+  <div class="select-buttons">
+    <button mat-flat-button [mat-dialog-close]="{option: true}">
+      <mat-icon color="primary">check</mat-icon>
+    </button>
+    <button mat-flat-button [mat-dialog-close]="{option: false}">
+      <mat-icon color="warn">clear</mat-icon>
+    </button>
+  </div>
+</div>

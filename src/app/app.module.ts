@@ -13,6 +13,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { BoardItemComponent } from './components/board-item/board-item.component';
 import { TaskItemComponent } from './components/task-item/task-item.component';
 import { AdditionDialogComponent } from './components/addition-dialog/addition-dialog.component';
+import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { AdditionDialogComponent } from './components/addition-dialog/addition-d
     KanbanComponent,
     BoardItemComponent,
     TaskItemComponent,
-    AdditionDialogComponent
+    AdditionDialogComponent,
+    ConfirmDialogComponent
   ],
   imports: [
     BrowserModule,
