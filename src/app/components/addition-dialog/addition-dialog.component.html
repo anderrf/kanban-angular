@@ -1,0 +1,8 @@
+<form [formGroup]="addRegister">
+  <input type="text" formControlName="itemName" placeholder="Insira uma nova {{itemCategory}}">
+  <p *ngIf="addRegister.get('itemName')?.errors?.required && addRegister.get('itemName')?.touched">O nome da {{itemCategory}} é obrigatório!</p>
+  <p *ngIf="addRegister.get('itemName')?.errors?.minlength && addRegister.get('itemName')?.touched">O nome da {{itemCategory}} precisa ter, no mínimo, 3 caracteres!</p>
+  <button mat-flat-button [mat-dialog-close]="{itemName: addRegister.get('itemName')?.value, valid: true}" [disabled]="addRegister.invalid">
+    <mat-icon>add</mat-icon>
+  </button>
+</form>

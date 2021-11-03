@@ -9,15 +9,20 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatDialogModule } from '@angular/material/dialog';
 import { BoardItemComponent } from './components/board-item/board-item.component';
 import { TaskItemComponent } from './components/task-item/task-item.component';
+import { AdditionDialogComponent } from './components/addition-dialog/addition-dialog.component';
+import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     KanbanComponent,
     BoardItemComponent,
-    TaskItemComponent
+    TaskItemComponent,
+    AdditionDialogComponent,
+    ConfirmDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -26,7 +31,8 @@ import { TaskItemComponent } from './components/task-item/task-item.component';
     ReactiveFormsModule,
     MatIconModule,
     MatButtonModule,
-    DragDropModule
+    DragDropModule,
+    MatDialogModule
   ],
   providers: [],
   bootstrap: [AppComponent]

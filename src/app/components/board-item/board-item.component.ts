@@ -1,6 +1,11 @@
-import { KanbanTask } from './../kanbanTask';
+import { TaskList } from './../../models/task-list';
+import { KanbanTask } from '../../models/kanbanTask';
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { MatDialog } from '@angular/material/dialog';
+import { AdditionDialogComponent } from '../addition-dialog/addition-dialog.component';
+import { StorageService } from '../storage.service';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-board-item',
@@ -9,12 +14,13 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 })
 export class BoardItemComponent implements OnInit {
 
-  @Input() listStatusName!: string;
-  @Input() taskList!: KanbanTask[];
-  @Output() onDelete: EventEmitter<number> = new EventEmitter();
+  @Input() list!: TaskList;
   @Output() onSwap: EventEmitter<KanbanTask> = new EventEmitter();
+  @Output() onAddTask: EventEmitter<string> = new EventEmitter();
+  @Output() onDeleteList: EventEmitter<string> = new EventEmitter();
+  @Output() onDeleteTask: EventEmitter<string> = new EventEmitter();
 
-  constructor() { }
+  constructor(public dialog: MatDialog, private storageService: StorageService) { }
 
   ngOnInit(): void {
   }
@@ -22,8 +28,8 @@ export class BoardItemComponent implements OnInit {
   removeTask($event: any): void{
     const taskId = $event.taskId as number;
     const listId = $event.listId as number;
-    this.taskList.splice(listId, 1);
-    this.onDelete.emit(taskId);
+    this.list.tasks.splice(listId, 1);
+    this.onDeleteTask.emit();
   }
 
   swap(event: CdkDragDrop<KanbanTask[]>): void{
@@ -37,9 +43,45 @@ export class BoardItemComponent implements OnInit {
       //checks if new array is one of the arrays for tasks
       //changes the item's status to match the array
       event.container.data[event.currentIndex].status = event.container.id;
-      const task = event.container.data[event.currentIndex];
-      this.onSwap.emit(task);
     }
+    this.onSwap.emit();
+  }
+
+  addTask(): void{
+    const addDialog = this.dialog.open(AdditionDialogComponent, {
+      width: '20rem',
+      data: {itemCategory: 'tarefa'}
+    });
+    addDialog.afterClosed().subscribe(result => {
+      if(result){
+        const newTaskName = result.itemName as string;
+        const valid = result.valid as boolean;
+        if(valid){
+          const newTask: KanbanTask = {
+            id: this.storageService.getSequence(),
+            description: newTaskName,
+            status: this.list.listName
+          };
+          this.list.tasks.push(newTask);
+          this.onAddTask.emit();
+        }
+      }
+    });
+  }
+
+  deleteList(){
+    const removeDialog = this.dialog.open(ConfirmDialogComponent, {
+      width: '20rem',
+      data: {itemCategory: 'lista'}
+    });
+    removeDialog.afterClosed().subscribe(result => {
+      if(result){
+        const option = result.option as boolean;
+        if(option){
+          this.onDeleteList.emit(this.list.listName);
+        }
+      }
+    });
   }
 
 }

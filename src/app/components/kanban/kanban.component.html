@@ -1,12 +1,11 @@
 <div id="board">
     <div class="titleAdd">
         <h1>Kanban</h1>
-        <form [formGroup]="taskRegister">
-            <input type="text" formControlName="taskName" placeholder="Insira uma nova tarefa">
-            <button (click)="addTask()">+</button>
-        </form>
     </div>
     <main id="boardArea" cdkDropListGroup>
-        <app-board-item *ngFor="let status of itemStatus" [listStatusName]="status" [taskList]="sendList(status)" (onDelete)="deleteTask($event)" (onSwap)="updateStatus($event)"></app-board-item>
+        <app-board-item *ngFor="let list of taskLists" [list]="list" (onDeleteList)="removeList($event)" (onDeleteTask)="updateLists()" (onAddTask)="updateLists()" (onSwap)="updateLists()"></app-board-item>
+        <button mat-raised-button (click)="addBoard()">
+          <mat-icon>add</mat-icon>
+        </button>
     </main>
 </div>

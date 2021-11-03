@@ -1,7 +1,8 @@
-import { KanbanTask } from './../kanbanTask';
+import { TaskList } from './../../models/task-list';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { StorageService } from '../storage.service';
+import { MatDialog } from '@angular/material/dialog';
+import { AdditionDialogComponent } from '../addition-dialog/addition-dialog.component';
 
 @Component({
   selector: 'app-kanban',
@@ -10,75 +11,44 @@ import { StorageService } from '../storage.service';
 })
 export class KanbanComponent implements OnInit {
 
-  public taskRegister!: FormGroup;
-  taskList!: KanbanTask[];
-  todoList!: KanbanTask[];
-  doingList!: KanbanTask[];
-  doneList!: KanbanTask[];
-  readonly itemStatus: string[] = ['to-do', 'doing', 'done'];
+  taskLists!: TaskList[];
 
-  constructor(private fb: FormBuilder, private storageService: StorageService) {
+  constructor(private storageService: StorageService, public dialog: MatDialog) {
    }
 
   ngOnInit(): void {
-    this.taskRegister = this.fb.group({
-      taskName: ['', [Validators.required, Validators.minLength(3)]]
+    this.taskLists = this.storageService.retrieveAllLists();
+  }
+
+  addBoard(): void{
+    let listNames: string[] = [];
+    this.taskLists.forEach((item) => {
+      listNames.push(item.listName.toLowerCase());
     });
-    this.taskList = this.storageService.retrieveAllTasks();
-    this.setTasks();
+    const addDialog = this.dialog.open(AdditionDialogComponent, {
+      width: '20rem',
+      data: {itemCategory: 'lista'}
+    });
+    addDialog.afterClosed().subscribe(result => {
+      if(result){
+        const newListName = result.itemName as string;
+        const valid = result.valid as boolean;
+        if(valid){
+          const newList: TaskList = {listName: newListName, tasks: []};
+          this.taskLists.push(newList);
+          this.updateLists();
+        }
+      }
+    });
   }
 
-  addTask(): void{
-    if(this.taskRegister.valid){
-      let task: KanbanTask = new KanbanTask(this.storageService.getSequence(), this.taskRegister.value['taskName'], 'to-do');
-      this.taskList.push(task);
-      this.taskRegister.reset();
-      this.setTasks();
-      this.storageService.saveTask(task);
-    }
+  removeList($event: any){
+    const removedList = $event as string;
+    this.taskLists.splice(this.taskLists.findIndex(list => list.listName == removedList), 1);
+    this.updateLists();
   }
 
-  private setTasks(): void{
-    this.todoList = this.taskList.filter(task => task.status == 'to-do');
-    this.doingList = this.taskList.filter(task => task.status == 'doing');
-    this.doneList = this.taskList.filter(task => task.status == 'done');
-  }
-
-  sendList(status: string): KanbanTask[]{
-    let list: KanbanTask[];
-    if(status === 'to-do'){
-      list = this.todoList;
-    }
-    else if(status === 'doing'){
-      list = this.doingList;
-    }
-    else if(status === 'done'){
-      list = this.doneList;
-    }
-    else{
-      list = [];
-    }
-    return list;
-  }
-
-  deleteTask($event: any): void{
-    try{
-      const deleteId: number = $event as number;
-      this.taskList.splice(this.taskList.findIndex(item => item.id == deleteId), 1);
-      this.storageService.deleteTaskById(deleteId);
-    }
-    catch(error){
-      console.log(error);
-    }
-  }
-
-  updateStatus($event: any): void{
-    try{
-      const task = $event as KanbanTask;
-      this.storageService.updateTaskStatus(task);
-    }
-    catch(error){
-      console.log(error);
-    }
+  updateLists(){
+    this.storageService.updateAllLists(this.taskLists);
   }
 }

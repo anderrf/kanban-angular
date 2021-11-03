@@ -1,4 +1,5 @@
-import { KanbanTask } from './kanbanTask';
+import { TaskList } from './../models/task-list';
+import { KanbanTask } from '../models/kanbanTask';
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -56,7 +57,7 @@ export class StorageService {
   }
 
   getSequence(): number{
-    let seq: number = 0;
+    let seq: number = 1;
     try{
       const receivedSeq: string | null = localStorage.getItem(this.taskSequenceKey);
       if(receivedSeq !== null){
@@ -115,5 +116,23 @@ export class StorageService {
     catch(error){
       console.log(error);
     }
+  }
+
+  updateAllLists(lists: TaskList[]): void{
+    const saveLists = JSON.stringify(lists);
+    localStorage.setItem(this.taskListKey, saveLists);
+  }
+
+  retrieveAllLists(): TaskList[]{
+    let lists: TaskList[] = [];
+    const getLists: string | null = localStorage.getItem(this.taskListKey);
+    if(getLists !== null){
+      const setLists: TaskList[] = JSON.parse(getLists) as TaskList[];
+      lists = setLists;
+    }
+    else{
+      this.updateAllLists(lists);
+    }
+    return lists;
   }
 }

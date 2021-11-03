@@ -20,10 +20,10 @@ body{
 }
 
 :root{
-    font-size: 16px;
+    font-size: 18px;
 }
 
-@media (max-width: 520px){
+@media(max-width: 560px){
     :root{
         font-size: 10px;
     }
